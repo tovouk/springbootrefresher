@@ -15,13 +15,16 @@ import com.josehinojo.springbootrefresher.model.User.Gender;
 @Repository
 public class FakeDataDao implements UserDao{
 
-	private static Map<UUID, User> database;
-	static {
+	private Map<UUID, User> database;
+	
+	
+	
+	public FakeDataDao() {
 		database = new HashMap<>();
 		UUID joeUserUid = UUID.randomUUID();
 		database.put(joeUserUid, new User(joeUserUid, "Joe","Jones",Gender.MALE,22,"joe.jones@gmail.com"));
 	}
-	
+
 	@Override
 	public List<User> selectAllUsers() {
 		// TODO Auto-generated method stub
