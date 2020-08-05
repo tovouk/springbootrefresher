@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.ArgumentMatchers;
 import org.mockito.MockitoAnnotations;
 import org.mockito.ArgumentCaptor;
 import org.mockito.BDDMockito;
@@ -30,11 +31,6 @@ class UserServiceTest {
 	void setUpBeforeClass() throws Exception {
 		MockitoAnnotations.initMocks(this);
 		userService = new UserService(fakeDataDao);
-	}
-
-	@Test
-	void testUserService() {
-		fail("Not yet implemented");
 	}
 
 	@Test
@@ -95,13 +91,38 @@ class UserServiceTest {
 	}
 
 	@Test
-	void testRemoveUser() {
-		fail("Not yet implemented");
+	void shouldRemoveUser() {
+		UUID annaUid = UUID.randomUUID();
+		User anna = new User(annaUid,"Anna","Montana",Gender.FEMALE,30,"anna@gmail.com");
+		
+		BDDMockito.given(fakeDataDao.selectUserByUserUid(annaUid)).willReturn(Optional.of(anna));
+		BDDMockito.given(fakeDataDao.deleteUserByUserUid(annaUid)).willReturn(1);
+				
+		int deleteResult = userService.removeUser(annaUid);
+
+		verify(fakeDataDao).selectUserByUserUid(annaUid);
+		verify(fakeDataDao).deleteUserByUserUid(annaUid);
+		
+		assertThat(deleteResult).isEqualTo(1);
 	}
 
 	@Test
-	void testInsertUser() {
-		fail("Not yet implemented");
+	void shouldInsertUser() {
+		User anna = new User(null,"Anna","Montana",Gender.FEMALE,30,"anna@gmail.com");
+		
+		BDDMockito.given(fakeDataDao.insertUser(ArgumentMatchers.any(UUID.class), ArgumentMatchers.eq(anna))).willReturn(1);
+		
+		ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+		
+		int insertResult = userService.insertUser(anna);
+		
+		verify(fakeDataDao).insertUser(ArgumentMatchers.any(UUID.class), captor.capture());
+		
+		User user = captor.getValue();
+		
+		assertUserFields(user);
+		
+		assertThat(insertResult).isEqualTo(1);
 	}
 	
 	private void assertUserFields(User user) {
@@ -111,6 +132,7 @@ class UserServiceTest {
 		assertThat(user.getGender()).isEqualTo(Gender.FEMALE);
 		assertThat(user.getEmail()).isEqualTo("anna@gmail.com");
 		assertThat(user.getUserUid()).isNotNull();
+		assertThat(user.getUserUid()).isInstanceOf(UUID.class);
 	}
 
 }
