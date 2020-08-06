@@ -11,6 +11,7 @@ import com.josehinojo.springbootrefresher.model.User;
 import com.josehinojo.springbootrefresher.service.UserService;
 
 @RestController
+@RequestMapping(path = "/api/v1/users")
 public class UserResource {
 
 	private UserService userService;
@@ -20,7 +21,7 @@ public class UserResource {
 		this.userService = userService;
 	}
 	
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET, path = "hello")
 	public List<User> fetchUsers(){
 		return userService.getAllUsers();
 	}
