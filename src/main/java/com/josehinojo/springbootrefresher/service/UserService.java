@@ -3,12 +3,14 @@ package com.josehinojo.springbootrefresher.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.josehinojo.springbootrefresher.dao.UserDao;
 import com.josehinojo.springbootrefresher.model.User;
+import com.josehinojo.springbootrefresher.model.User.Gender;
 
 @Service
 public class UserService {
@@ -49,5 +51,22 @@ public class UserService {
 		UUID userUid = UUID.randomUUID();
 		user.setUserUid(userUid);
 		return userDao.insertUser(userUid,user);
+	}
+
+	public List<User> getAllUsers(Optional<String> gender) {
+		List<User> users = userDao.selectAllUsers();
+		if(!gender.isPresent()) {
+			return users;
+		}
+		try {
+			Gender theGender = User.Gender.valueOf(gender.get().toUpperCase());
+			return users.stream()
+					.filter(user -> user.getGender().equals(theGender))
+					.collect(Collectors.toList());
+		}catch(Exception e) {
+			throw new IllegalStateException("Invalid gender",e);
+			
+		}
+		
 	}
 }
