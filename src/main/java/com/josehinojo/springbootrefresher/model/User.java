@@ -1,5 +1,6 @@
 package com.josehinojo.springbootrefresher.model;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -45,6 +46,14 @@ public class User {
 
 	public String getEmail() {
 		return email;
+	}
+	
+	public String getFullName() {
+		return firstName + " " + lastName;
+	}
+	
+	public int getDateOfBirth() {
+		return LocalDate.now().minusYears(age).getYear();
 	}
 
 	public User(@JsonProperty("userUid") UUID userUid,
