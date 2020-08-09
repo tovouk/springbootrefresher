@@ -1,6 +1,7 @@
 package com.josehinojo.springbootrefresher.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 
@@ -48,8 +49,35 @@ class UserServiceTest {
 		assertThat(allUsers).hasSize(1);
 		
 		User user = allUsers.get(0);
-		assertUserFields(user);
+		assertAnnaFields(user);
 		
+	}
+	
+	@Test
+	void shouldGetAllUsersByGender() throws Exception{
+		UUID annaUserUid = UUID.randomUUID();
+		User anna = new User(annaUserUid,"Anna","Montana",Gender.FEMALE,30,"anna@gmail.com");
+		
+		UUID joeUserUid = UUID.randomUUID();
+		User joe = new User(joeUserUid,"Joe","Jones",Gender.MALE,22,"joe.jones@gmail.com");
+		
+		List<User> users = new ArrayList<User>();
+		users.add(anna);
+		users.add(joe);
+		
+		BDDMockito.given(fakeDataDao.selectAllUsers()).willReturn(users);
+		
+		List<User> filteredUsers = userService.getAllUsers(Optional.of("female"));
+		assertThat(filteredUsers).hasSize(1);
+		assertAnnaFields(filteredUsers.get(0));
+		
+	}
+	
+	@Test
+	void shouldThrowExceptionWhenGenderIsInvalid() {
+		assertThatThrownBy(() -> userService.getAllUsers(Optional.of("asdfasdfas")))
+		.isInstanceOf(IllegalStateException.class)
+		.hasMessageContaining("Invalid gender");
 	}
 
 	@Test
@@ -64,7 +92,7 @@ class UserServiceTest {
 		assertThat(userOptional.isPresent()).isTrue();
 		User user = userOptional.get();
 		
-		assertUserFields(user);
+		assertAnnaFields(user);
 		
 	}
 
@@ -84,7 +112,7 @@ class UserServiceTest {
 		verify(fakeDataDao).updateUser(captor.capture());
 		
 		User user = captor.getValue();
-		assertUserFields(user);
+		assertAnnaFields(user);
 		
 		assertThat(updateResult).isEqualTo(1);
 		
@@ -120,12 +148,12 @@ class UserServiceTest {
 		
 		User user = captor.getValue();
 		
-		assertUserFields(user);
+		assertAnnaFields(user);
 		
 		assertThat(insertResult).isEqualTo(1);
 	}
 	
-	private void assertUserFields(User user) {
+	private void assertAnnaFields(User user) {
 		assertThat(user.getAge()).isEqualTo(30);
 		assertThat(user.getFirstName()).isEqualTo("Anna");
 		assertThat(user.getLastName()).isEqualTo("Montana");

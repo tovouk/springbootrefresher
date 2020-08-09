@@ -22,8 +22,21 @@ public class UserService {
 		this.userDao = userDao;
 	}
 
-	public List<User> getAllUsers() {
-		return userDao.selectAllUsers();
+	public List<User> getAllUsers(Optional<String> gender) {
+		List<User> users = userDao.selectAllUsers();
+		if(!gender.isPresent()) {
+			return users;
+		}
+		try {
+			Gender theGender = User.Gender.valueOf(gender.get().toUpperCase());
+			return users.stream()
+					.filter(user -> user.getGender().equals(theGender))
+					.collect(Collectors.toList());
+		}catch(Exception e) {
+			throw new IllegalStateException("Invalid gender",e);
+			
+		}
+		
 	}
 
 	public Optional<User> getUser(UUID userUid) {
@@ -53,20 +66,4 @@ public class UserService {
 		return userDao.insertUser(userUid,user);
 	}
 
-	public List<User> getAllUsers(Optional<String> gender) {
-		List<User> users = userDao.selectAllUsers();
-		if(!gender.isPresent()) {
-			return users;
-		}
-		try {
-			Gender theGender = User.Gender.valueOf(gender.get().toUpperCase());
-			return users.stream()
-					.filter(user -> user.getGender().equals(theGender))
-					.collect(Collectors.toList());
-		}catch(Exception e) {
-			throw new IllegalStateException("Invalid gender",e);
-			
-		}
-		
-	}
 }
