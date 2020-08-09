@@ -27,11 +27,11 @@ public class User {
 	public UUID getUserUid() {
 		return userUid;
 	}
-
+	//@JsonIgnore to ignore
 	public String getFirstName() {
 		return firstName;
 	}
-
+	//@JsonIgnore to ignore
 	public String getLastName() {
 		return lastName;
 	}
