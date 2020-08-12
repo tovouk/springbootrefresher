@@ -51,7 +51,7 @@ public class UserResourceRestEasy {
 	public Response fetchUser(@PathParam("userUid") UUID userUid) {
 		Optional<User> user = userService.getUser(userUid);
 		if(user.isPresent()) {
-			return Response.ok().entity(user.get()).build();
+			return Response.ok(user.get()).build();
 		} else {
 			return Response.status(Status.NOT_FOUND)
 			.entity(new ErrorMessage("user " + userUid + " was not found."))
@@ -63,7 +63,7 @@ public class UserResourceRestEasy {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response insertUser(@RequestBody User user) {
+	public Response insertUser(User user) {
 		return getIntegerResponse(userService.insertUser(user));
 		
 	}
@@ -71,7 +71,7 @@ public class UserResourceRestEasy {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateUser(@RequestBody User user) {
+	public Response updateUser(User user) {
 		return getIntegerResponse(userService.updateUser(user));
 	}
 	
