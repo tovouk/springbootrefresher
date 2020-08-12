@@ -87,7 +87,7 @@ public class UserResourceRestEasy {
 		if(result == 1) {
 			return Response.ok().build();
 		}
-		return Response.status(Status.NOT_ACCEPTABLE).build();
+		return Response.status(Status.BAD_REQUEST).build();
 	}
 	
 	class ErrorMessage {
