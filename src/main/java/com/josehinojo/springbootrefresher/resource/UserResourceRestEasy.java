@@ -1,14 +1,8 @@
 package com.josehinojo.springbootrefresher.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.client.HttpClientErrorException.NotFound;
-
 import com.josehinojo.springbootrefresher.model.User;
-import com.josehinojo.springbootrefresher.resource.UserResourceSpringMVC.ErrorMessage;
 import com.josehinojo.springbootrefresher.service.UserService;
 
 import java.util.List;
@@ -88,24 +82,6 @@ public class UserResourceRestEasy {
 			return Response.ok().build();
 		}
 		return Response.status(Status.BAD_REQUEST).build();
-	}
-	
-	class ErrorMessage {
-		String errorMessage;
-
-		public ErrorMessage(String errorMessage) {
-			super();
-			this.errorMessage = errorMessage;
-		}
-
-		public String getErrorMessage() {
-			return errorMessage;
-		}
-
-		public void setErrorMessage(String errorMessage) {
-			this.errorMessage = errorMessage;
-		}
-		
 	}
 	
 }
