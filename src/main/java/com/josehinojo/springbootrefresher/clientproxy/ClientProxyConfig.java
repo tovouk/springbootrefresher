@@ -1,6 +1,8 @@
 package com.josehinojo.springbootrefresher.clientproxy;
 
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
@@ -14,13 +16,13 @@ public class ClientProxyConfig {
 	@Value("${users.api.url.v1}")
 	private String usersEndpointUrl;
 	
-	@Bean
-	public UserResourceV1 getUserResourceV1() {
-		ResteasyClient client = (ResteasyClient)ClientBuilder.newClient();
-		ResteasyWebTarget target = client.target(usersEndpointUrl);
-		UserResourceV1 proxy = target.proxy(UserResourceV1.class);
-		return proxy;
-	}
+//	@Bean
+//	public UserResourceV1 getUserResourceV1() {
+//		Client client = ClientBuilder.newClient();
+//		WebTarget target = client.target(usersEndpointUrl);
+//		UserResourceV1 proxy = target.request().get().;
+//		return proxy;
+//	}
 	
 	
 	
